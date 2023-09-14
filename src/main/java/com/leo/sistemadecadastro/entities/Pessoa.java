@@ -1,11 +1,6 @@
 package com.leo.sistemadecadastro.entities;
 
-import com.leo.sistemadecadastro.dto.PessoaDTO;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -23,34 +18,43 @@ public class Pessoa {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nome;
+    @Column(unique = true)
     private String cpf;
     private LocalDate dataNascimento;
     private String telefone;
     private String email;
 
-    public Pessoa(String nome, String cpf, LocalDate dataNascimento, String telefone, String email) {
+    @ManyToOne
+    @JoinColumn(name = "endereco_id")
+    private Endereco endereco;
+
+    public Pessoa(String nome, String cpf, LocalDate dataNascimento, String telefone, String email, Endereco endereco) {
         this.nome = nome;
         this.cpf = cpf;
         this.dataNascimento = dataNascimento;
         this.telefone = telefone;
         this.email = email;
+        this.endereco = endereco;
     }
 
-    public void atualizarInformacoes(PessoaDTO dados) {
-        if (dados.nome() != null) {
-            this.nome = dados.nome();
+    public void atualizarInformacoes(Pessoa dados) {
+        if (dados.nome != null) {
+            this.nome = dados.nome;
         }
-        if (dados.telefone() != null) {
-            this.cpf = dados.cpf();
+        if (dados.telefone != null) {
+            this.cpf = dados.cpf;
         }
-        if (dados.dataNascimento() != null) {
-            this.dataNascimento = dados.dataNascimento();
+        if (dados.dataNascimento != null) {
+            this.dataNascimento = dados.dataNascimento;
         }
-        if (dados.telefone() != null) {
-            this.telefone = dados.telefone();
+        if (dados.telefone != null) {
+            this.telefone = dados.telefone;
         }
-        if (dados.email() != null) {
-            this.email = dados.email();
+        if (dados.email != null) {
+            this.email = dados.email;
+        }
+        if (dados.endereco != null) {
+            this.endereco = dados.endereco;
         }
     }
 }

@@ -4,7 +4,6 @@ package com.leo.sistemadecadastro.controller;
 import com.leo.sistemadecadastro.dto.PessoaDTO;
 import com.leo.sistemadecadastro.entities.Pessoa;
 import com.leo.sistemadecadastro.service.PessoaService;
-import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,15 +16,10 @@ import java.util.List;
 @RequestMapping("/pessoas")
 public class PessoaController {
 
-    private final PessoaService service;
-
     @Autowired
-    public PessoaController(PessoaService service) {
-        this.service = service;
-    }
+    private PessoaService service;
 
     @PostMapping
-    @Transactional
     public ResponseEntity<Pessoa> cadastrar(@RequestBody @Valid PessoaDTO pessoaDTO) {
         Pessoa pessoaCadastrada = service.cadastrar(pessoaDTO.transformaParaPessoa());
         return ResponseEntity.status(HttpStatus.CREATED).body(pessoaCadastrada);
@@ -38,14 +32,12 @@ public class PessoaController {
     }
 
     @PutMapping("/{id}")
-    @Transactional
-    public ResponseEntity<Pessoa> atualizar(@PathVariable Long id, @RequestBody @Valid PessoaDTO dados) {
-        Pessoa pessoaAtualizada = service.atualizar(id, dados);
+    public ResponseEntity<Pessoa> atualizar(@PathVariable Long id, @RequestBody @Valid PessoaDTO pessoaDTO) {
+        Pessoa pessoaAtualizada = service.atualizar(id, pessoaDTO.transformaParaPessoa());
         return ResponseEntity.ok(pessoaAtualizada);
     }
 
     @DeleteMapping("/{id}")
-    @Transactional
     public ResponseEntity<Void> excluir(@PathVariable Long id) {
         service.excluir(id);
         return ResponseEntity.noContent().build();

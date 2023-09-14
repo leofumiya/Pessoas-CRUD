@@ -1,7 +1,9 @@
 package com.leo.sistemadecadastro.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.leo.sistemadecadastro.entities.Endereco;
 import com.leo.sistemadecadastro.entities.Pessoa;
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -23,9 +25,10 @@ public record PessoaDTO(
         String telefone,
         @NotBlank
         @Email
-        String email) {
+        String email,
+        Endereco endereco ) {
 
     public Pessoa transformaParaPessoa() {
-            return new Pessoa(nome, cpf, dataNascimento, telefone, email);
+            return new Pessoa(nome, cpf, dataNascimento, telefone, email, endereco);
     }
 }

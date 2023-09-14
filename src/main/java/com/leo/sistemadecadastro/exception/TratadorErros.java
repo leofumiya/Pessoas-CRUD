@@ -1,6 +1,7 @@
 package com.leo.sistemadecadastro.exception;
 
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -21,9 +22,18 @@ public class TratadorErros {
         var erros = e.getFieldErrors();
         return ResponseEntity.badRequest().body(erros.stream().map(DadosErroValidacao::new).toList());
     }
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity tratarErro(DataIntegrityViolationException e) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).build();
+    }
 
     @ExceptionHandler(PessoaNaoEncontradaException.class)
     public ResponseEntity PessoaNaoEncontradaException(PessoaNaoEncontradaException e) {
+        return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(EnderecoNaoEncontradoException.class)
+    public ResponseEntity EnderecoNaoEncontradoException(EnderecoNaoEncontradoException e) {
         return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
     }
 
